@@ -1,0 +1,25 @@
+body {
+  background-color: #111;
+  color: white;
+  font-family: monospace;
+  text-align: center;
+  padding: 2em;
+}
+input {
+  margin: 5px;
+  padding: 8px;
+  border-radius: 5px;
+}
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  background: #9147ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#output {
+  margin-top: 2em;
+  white-space: pre-line;
+}

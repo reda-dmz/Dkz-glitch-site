@@ -1,16 +1,31 @@
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Only POST requests allowed" });
+    return res.status(405).json({ message: "Only POST allowed" });
   }
 
   const { word1, word2, word3 } = req.body;
 
   if (!word1 || !word2 || !word3) {
-    return res.status(400).json({ message: "Missing words" });
+    return res.status(400).json({ message: "Missing input words" });
   }
 
-  // Simple mock story generation (replace with real OpenAI call later)
-  const story = `In a glitchy world of ${word1}, ${word2}, and ${word3}, a strange tale unfolds...`;
+  try {
+    const prompt = `Write a creative short story inspired by these three random words: ${word1}, ${word2}, and ${word3}. Make it glitchy, surreal, and weird.`;
 
-  return res.status(200).json({ story });
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-4o",
+    });
+
+    const story = completion.choices[0].message.content;
+
+    res.status(200).json({ story });
+  } catch (error) {
+    console.error("OpenAI error:", error);
+    res.status(500).json({ message: "Failed to generate story" });
+  }
 }

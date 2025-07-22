@@ -1,33 +1,24 @@
-generateBtn.addEventListener("click", async () => {
-  const word1 = word1Input.value;
-  const word2 = word2Input.value;
-  const word3 = word3Input.value;
+const btn = document.getElementById("generateBtn");
+btn.addEventListener("click", async () => {
+  const w1 = document.getElementById("word1").value;
+  const w2 = document.getElementById("word2").value;
+  const w3 = document.getElementById("word3").value;
 
-  if (!word1 || !word2 || !word3) {
-    alert("Please enter all 3 words.");
-    return;
-  }
+  if (!w1 || !w2 || !w3) return alert("Enter all 3 words!");
 
-  resultDiv.textContent = "Generating...";
+  const output = document.getElementById("output");
+  output.textContent = "Generating...";
 
   try {
-    const response = await fetch("/api/generate-world", {
+    const res = await fetch("/api/generate-world", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ word1, word2, word3 })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ word1: w1, word2: w2, word3: w3 })
     });
-
-    if (!response.ok) {
-      alert("Fetch failed: " + response.status);
-      throw new Error("Fetch error: " + response.status);
-    }
-
-    const data = await response.json();
-    resultDiv.textContent = data.result;
-  } catch (error) {
-    alert("Error: " + error.message);
-    resultDiv.textContent = "Error generating story.";
+    if (!res.ok) return alert("Server error: " + res.status);
+    const data = await res.json();
+    output.textContent = data.result;
+  } catch {
+    alert("Network error or invalid JSON");
   }
 });
